@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS flashcards (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    collection_id BIGINT NOT NULL,
+    question VARCHAR(255) NOT NULL,
+    answer VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (collection_id) REFERENCES collections(id) ON DELETE CASCADE
+);
