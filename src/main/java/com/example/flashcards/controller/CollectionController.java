@@ -24,7 +24,8 @@ public class CollectionController {
     private final FlashcardService flashcardService;
 
     @Autowired
-    public CollectionController(UserService userService, CollectionService collectionService, FlashcardService flashcardService) {
+    public CollectionController(UserService userService, CollectionService collectionService,
+            FlashcardService flashcardService) {
         this.userService = userService;
         this.collectionService = collectionService;
         this.flashcardService = flashcardService;
@@ -48,7 +49,9 @@ public class CollectionController {
         if (collection == null) {
             return "collection/not-found";
         }
+        List<Flashcard> flashcards = flashcardService.getFlashcardsByCollectionId(collectionId);
         model.addAttribute("collection", collection);
+        model.addAttribute("flashcards", flashcards);
         return "collection/view";
     }
 
@@ -65,5 +68,5 @@ public class CollectionController {
         }
         return "redirect:/";
     }
-    
+
 }

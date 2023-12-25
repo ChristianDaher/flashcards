@@ -17,7 +17,8 @@ public class User {
     private String name;
     private String email;
     // private String password;
-    @Column(name = "created_at")private LocalDateTime createdAt;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
     public Long getId() {
         return id;
@@ -44,11 +45,11 @@ public class User {
     }
 
     // public void setPassword(String hashedPassword) {
-    //     this.password = hashedPassword;
+    // this.password = hashedPassword;
     // }
 
     // public String getPassword() {
-    //     return password;
+    // return password;
     // }
 
     public LocalDateTime getCreatedAt() {

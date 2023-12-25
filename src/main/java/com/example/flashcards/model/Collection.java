@@ -15,11 +15,18 @@ public class Collection {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "user_id") private Long userId;
+    @Column(name = "user_id")
+    private Long userId;
     private String title;
     private String category;
-    @Column(name = "created_at") private LocalDateTime createdAt;
-    @Transient private int flashcardCount;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+    @Transient
+    private int flashcardCount;
+    @Transient
+    private int answeredFlashcardCount;
+    @Transient
+    private int correctlyAnsweredFlashcardCount;
 
     public Long getId() {
         return id;
@@ -67,5 +74,21 @@ public class Collection {
 
     public void setFlashcardCount(int flashcardCount) {
         this.flashcardCount = flashcardCount;
+    }
+
+    public int getAnsweredFlashcardCount() {
+        return answeredFlashcardCount;
+    }
+
+    public void setAnsweredFlashcardCount(int answeredFlashcardCount) {
+        this.answeredFlashcardCount = answeredFlashcardCount;
+    }
+
+    public int getCorrectlyAnsweredFlashcardCount() {
+        return correctlyAnsweredFlashcardCount;
+    }
+
+    public void setCorrectlyAnsweredFlashcardCount(int correctlyAnsweredFlashcardCount) {
+        this.correctlyAnsweredFlashcardCount = correctlyAnsweredFlashcardCount;
     }
 }

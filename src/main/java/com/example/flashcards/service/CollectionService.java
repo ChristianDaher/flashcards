@@ -1,8 +1,11 @@
 package com.example.flashcards.service;
 
 import com.example.flashcards.model.Collection;
+import com.example.flashcards.model.Flashcard;
 import com.example.flashcards.repository.CollectionRepository;
 import com.example.flashcards.repository.FlashcardRepository;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -31,11 +34,27 @@ public class CollectionService {
     }
 
     public Map<String, List<Collection>> groupCollectionsByCategory(List<Collection> collections) {
-        return collections.stream().collect(Collectors.groupingBy(collection -> collection.getCategory().toLowerCase()));
+        return collections.stream()
+                .collect(Collectors.groupingBy(collection -> collection.getCategory().toLowerCase()));
     }
 
     public Collection getCollectionById(Long id) {
-        return collectionRepository.findById(id).orElse(null);
+        Collection collection = collectionRepository.findById(id).orElse(null);
+        List<Flashcard> flashcards = flashcardRepository.findAllByCollectionId(id);
+        int answeredFlashcardCount = 0;
+        int correctlyAnsweredFlashcardCount = 0;
+        for (Flashcard flashcard : flashcards) {
+            if (flashcard.getAnsweredAt() != null) {
+                answeredFlashcardCount++;
+                if (flashcard.getIsCorrect()) {
+                    correctlyAnsweredFlashcardCount++;
+                }
+            }
+        }
+        collection.setFlashcardCount(flashcards.size());
+        collection.setAnsweredFlashcardCount(answeredFlashcardCount);
+        collection.setCorrectlyAnsweredFlashcardCount(correctlyAnsweredFlashcardCount);
+        return collection;
     }
 
     public void createCollection(Long userId, String title, String category) {
@@ -43,6 +62,7 @@ public class CollectionService {
         collection.setUserId(userId);
         collection.setTitle(title);
         collection.setCategory(category.toLowerCase());
+        collection.setCreatedAt(LocalDateTime.now());
         collectionRepository.save(collection);
     }
 }
