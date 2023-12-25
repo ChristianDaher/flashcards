@@ -14,11 +14,17 @@ public class Flashcard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name="collection_id") private Long collectionId;
+    @Column(name = "collection_id")
+    private Long collectionId;
     private String question;
     private String answer;
-    @Column(name = "created_at")private LocalDateTime createdAt;
-    
+    @Column(name = "answered_at")
+    private LocalDateTime answeredAt;
+    @Column(name = "is_correct")
+    private Boolean isCorrect;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
     public Long getId() {
         return id;
     }
@@ -49,6 +55,22 @@ public class Flashcard {
 
     public void setAnswer(String answer) {
         this.answer = answer;
+    }
+
+    public LocalDateTime getAnsweredAt() {
+        return answeredAt;
+    }
+
+    public void setAnsweredAt(LocalDateTime answeredAt) {
+        this.answeredAt = answeredAt;
+    }
+
+    public Boolean getIsCorrect() {
+        return isCorrect;
+    }
+
+    public void setIsCorrect(Boolean isCorrect) {
+        this.isCorrect = isCorrect;
     }
 
     public LocalDateTime getCreatedAt() {
