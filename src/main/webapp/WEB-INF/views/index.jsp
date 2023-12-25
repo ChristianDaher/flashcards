@@ -64,7 +64,7 @@ public String getRandomColor() {
               </div>
               <div class="col-span-4 flex items-center gap-4 justify-self-end">
                 <a href="/collection/<%= collection.getId() %>" class="rounded-full bg-gray-200 h-8 w-8 flex items-center justify-center hover:bg-gray-300 transition-all"><img src="/edit.svg" alt="edit"></a>
-                <div>play</div>
+                <a href="/collection/<%= collection.getId() %>/play" class="flex items-center justify-center"><img src="/play.svg" alt="play"></a>
               </div>
             </li>
           <% } %>

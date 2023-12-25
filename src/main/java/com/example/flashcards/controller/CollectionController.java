@@ -1,5 +1,7 @@
 package com.example.flashcards.controller;
 
+import java.util.List;
+import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,7 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.example.flashcards.model.User;
 import com.example.flashcards.model.Collection;
+import com.example.flashcards.model.Flashcard;
 import com.example.flashcards.service.CollectionService;
+import com.example.flashcards.service.FlashcardService;
 import com.example.flashcards.service.UserService;
 import org.springframework.ui.Model;
 
@@ -17,11 +21,13 @@ public class CollectionController {
 
     private final UserService userService;
     private final CollectionService collectionService;
+    private final FlashcardService flashcardService;
 
     @Autowired
-    public CollectionController(UserService userService, CollectionService collectionService) {
+    public CollectionController(UserService userService, CollectionService collectionService, FlashcardService flashcardService) {
         this.userService = userService;
         this.collectionService = collectionService;
+        this.flashcardService = flashcardService;
     }
 
     @GetMapping("/collection/create")
@@ -45,4 +51,19 @@ public class CollectionController {
         model.addAttribute("collection", collection);
         return "collection/view";
     }
+
+    @GetMapping("/collection/{collectionId}/play")
+    public String play(@PathVariable Long collectionId, Model model) {
+        // Need more error handling in case of wrong ids and empty arrays
+        List<Flashcard> flashcards = flashcardService.getFlashcardsByCollectionId(collectionId);
+        List<Flashcard> unasweredFlashcards = flashcardService.getUnansweredFlashcards(flashcards);
+        if (!unasweredFlashcards.isEmpty()) {
+            Random random = new Random();
+            Flashcard randomFlashcard = unasweredFlashcards.get(random.nextInt(unasweredFlashcards.size()));
+            model.addAttribute("flashcard", randomFlashcard);
+            return "collection/play";
+        }
+        return "redirect:/";
+    }
+    
 }
