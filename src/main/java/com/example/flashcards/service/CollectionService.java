@@ -2,7 +2,10 @@ package com.example.flashcards.service;
 
 import com.example.flashcards.model.Collection;
 import com.example.flashcards.repository.CollectionRepository;
+import com.example.flashcards.repository.FlashcardRepository;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,13 +13,36 @@ import org.springframework.stereotype.Service;
 public class CollectionService {
 
     public final CollectionRepository collectionRepository;
+    public final FlashcardRepository flashcardRepository;
 
     @Autowired
-    public CollectionService(CollectionRepository collectionRepository) {
+    public CollectionService(CollectionRepository collectionRepository, FlashcardRepository flashcardRepository) {
         this.collectionRepository = collectionRepository;
+        this.flashcardRepository = flashcardRepository;
     }
 
     public List<Collection> getCollectionsByUserId(Long userId) {
-        return collectionRepository.findAllByUserId(userId);
+        List<Collection> collections = collectionRepository.findAllByUserId(userId);
+        for (Collection collection : collections) {
+            int flashcardCount = flashcardRepository.countByCollectionId(collection.getId());
+            collection.setFlashcardCount(flashcardCount);
+        }
+        return collections;
+    }
+
+    public Map<String, List<Collection>> groupCollectionsByCategory(List<Collection> collections) {
+        return collections.stream().collect(Collectors.groupingBy(collection -> collection.getCategory().toLowerCase()));
+    }
+
+    public Collection getCollectionById(Long id) {
+        return collectionRepository.findById(id).orElse(null);
+    }
+
+    public void createCollection(Long userId, String title, String category) {
+        Collection collection = new Collection();
+        collection.setUserId(userId);
+        collection.setTitle(title);
+        collection.setCategory(category.toLowerCase());
+        collectionRepository.save(collection);
     }
 }

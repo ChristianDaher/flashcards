@@ -5,6 +5,7 @@ import com.example.flashcards.model.User;
 import com.example.flashcards.service.CollectionService;
 import com.example.flashcards.service.UserService;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,13 +23,14 @@ public class MainController {
         this.collectionService = collectionService;
     }
 
-    @GetMapping("/")
+    @GetMapping(value = { "/", "/index", "/home", "/collections" })
     public String index(Model model) {
         // Change id to authenticated user id after implementing authentication
         User user = userService.getUserById(1L);
         List<Collection> collections = collectionService.getCollectionsByUserId(user.getId());
+        Map<String, List<Collection>> groupedCollections = collectionService.groupCollectionsByCategory(collections);
         model.addAttribute("user", user);
-        model.addAttribute("collections", collections);
+        model.addAttribute("groupedCollections", groupedCollections);
         return "index";
     }
 }

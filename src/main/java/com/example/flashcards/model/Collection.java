@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import java.time.LocalDateTime;
 
 @Entity
@@ -14,11 +15,12 @@ public class Collection {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name="user_id") private Long userId;
+    @Column(name = "user_id") private Long userId;
     private String title;
     private String category;
-    @Column(name = "created_at")private LocalDateTime createdAt;
-    
+    @Column(name = "created_at") private LocalDateTime createdAt;
+    @Transient private int flashcardCount;
+
     public Long getId() {
         return id;
     }
@@ -57,5 +59,13 @@ public class Collection {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public int getFlashcardCount() {
+        return flashcardCount;
+    }
+
+    public void setFlashcardCount(int flashcardCount) {
+        this.flashcardCount = flashcardCount;
     }
 }

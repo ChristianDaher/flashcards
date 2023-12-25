@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FlashcardRepository extends JpaRepository<Flashcard, Long> {
     List<Flashcard> findAllByCollectionId(Long collectionId);
+    int countByCollectionId(Long collectionId);
 }
