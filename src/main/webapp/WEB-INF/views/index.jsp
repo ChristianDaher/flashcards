@@ -27,7 +27,7 @@ public String getRandomColor() {
   <body class="flex h-screen p-4 sm:p-8 items-center <%= bodyClass %>">
     <% if (groupedCollections.isEmpty()) { %>
     <div class="p-8 bg-zinc-50 rounded-lg shadow-lg text-center">
-      <h1 class="text-2xl">Welcome back, <%= user.getName() %>!</h1>
+      <h1 class="text-2xl">Welcome back! <%= user.getName() %></h1>
       <img src="/flashcards.svg" alt="flashcards" class="mx-auto my-6" />
       <h2 class="text-xl font-bold">Flash Cards</h2>
       <p class="mt-2 mb-6 text-sm">Get started with your first collection</p>
