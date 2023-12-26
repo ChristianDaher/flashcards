@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.example.flashcards.model.User;
 import com.example.flashcards.model.Collection;
@@ -17,6 +18,7 @@ import com.example.flashcards.service.UserService;
 import org.springframework.ui.Model;
 
 @Controller
+@RequestMapping("/collection")
 public class CollectionController {
 
     private final UserService userService;
@@ -31,19 +33,19 @@ public class CollectionController {
         this.flashcardService = flashcardService;
     }
 
-    @GetMapping("/collection/create")
+    @GetMapping("/create")
     public String create() {
         return "collection/create";
     }
 
-    @PostMapping("/collection/create")
+    @PostMapping("/create")
     public String store(@RequestParam("title") String title, @RequestParam("category") String category) {
         User user = userService.getUserById(1L); // Should be changed later ofc
         collectionService.createCollection(user.getId(), title, category);
         return "redirect:/";
     }
 
-    @GetMapping("/collection/{collectionId}")
+    @GetMapping("/{collectionId}")
     public String view(@PathVariable Long collectionId, Model model) {
         Collection collection = collectionService.getCollectionById(collectionId);
         if (collection == null) {
@@ -55,7 +57,16 @@ public class CollectionController {
         return "collection/view";
     }
 
-    @GetMapping("/collection/{collectionId}/play")
+    @PostMapping("/{collectionId}/reset")
+    public String reset(@PathVariable Long collectionId) {
+        List<Flashcard> flashcards = flashcardService.getFlashcardsByCollectionId(collectionId);
+        for (Flashcard flashcard : flashcards) {
+            flashcardService.resetFlashcard(flashcard);
+        }
+        return "redirect:/collection/" + collectionId;
+    }
+
+    @GetMapping("/{collectionId}/play")
     public String play(@PathVariable Long collectionId, Model model) {
         // Need more error handling in case of wrong ids and empty arrays
         List<Flashcard> flashcards = flashcardService.getFlashcardsByCollectionId(collectionId);

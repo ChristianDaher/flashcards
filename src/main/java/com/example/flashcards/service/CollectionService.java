@@ -46,7 +46,7 @@ public class CollectionService {
         for (Flashcard flashcard : flashcards) {
             if (flashcard.getAnsweredAt() != null) {
                 answeredFlashcardCount++;
-                if (flashcard.getIsCorrect()) {
+                if (flashcard.getIsCorrect() != null && flashcard.getIsCorrect()) {
                     correctlyAnsweredFlashcardCount++;
                 }
             }

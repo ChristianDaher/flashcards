@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS flashcards (
     question VARCHAR(255) NOT NULL,
     answer VARCHAR(255) NOT NULL,
     answered_at TIMESTAMP NULL,
-    is_correct BOOLEAN DEFAULT FALSE,
+    is_correct BOOLEAN NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (collection_id) REFERENCES collections(id) ON DELETE CASCADE
 );

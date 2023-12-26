@@ -24,4 +24,10 @@ public class FlashcardService {
     public List<Flashcard> getUnansweredFlashcards(List<Flashcard> flashcards) {
         return flashcards.stream().filter(flashcard -> flashcard.getAnsweredAt() == null).collect(Collectors.toList());
     }
+
+    public void resetFlashcard(Flashcard flashcard) {
+        flashcard.setAnsweredAt(null);
+        flashcard.setIsCorrect(null);
+        flashcardRepository.save(flashcard);
+    }
 }
