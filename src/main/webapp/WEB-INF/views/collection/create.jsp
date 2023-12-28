@@ -32,11 +32,18 @@ pageEncoding="UTF-8" %>
           required
           class="px-4 py-2 w-full border border-gray-300 rounded-lg mb-12"
         />
-        <button
-          class="block mx-auto rounded-full py-2 px-4 bg-blue-500 text-white hover:bg-blue-600 transition-all"
-        >
-          Create Collection
-        </button>
+        <div class="flex items-center justify-between">
+          <a
+            href="/"
+            class="rounded-lg py-2 px-4 bg-purple-500 text-white hover:bg-purple-600 transition-all"
+            >Back</a
+          >
+          <button
+            class="rounded-lg py-2 px-4 bg-blue-500 text-white hover:bg-blue-600 transition-all"
+          >
+            Create Collection
+          </button>
+        </div>
       </form>
     </div>
   </body>

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -72,6 +73,16 @@ public class CollectionController {
         }
         Collection editedCollection = collectionService.editCollection(collection, title, category);
         return new ResponseEntity<>(editedCollection, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{collectionId}")
+    public ResponseEntity<Collection> delete(@PathVariable Long collectionId) {
+        Collection collection = collectionService.getCollectionById(collectionId);
+        if (collection == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        collectionService.deleteCollection(collection);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/{collectionId}/reset")

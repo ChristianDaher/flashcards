@@ -77,4 +77,8 @@ public class CollectionService {
         collectionRepository.save(collection);
         return collection;
     }
+
+    public void deleteCollection(Collection collection) {
+        collectionRepository.delete(collection);
+    }
 }

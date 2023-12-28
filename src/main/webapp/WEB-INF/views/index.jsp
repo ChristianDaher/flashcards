@@ -33,7 +33,7 @@ public String getRandomColor() {
       <p class="mt-2 mb-6 text-sm">Get started with your first collection</p>
       <a href="/collection/create">
         <button
-          class="rounded-full py-2 px-4 bg-blue-500 text-white hover:bg-blue-600 transition-all"
+          class="rounded-lg py-2 px-4 bg-blue-500 text-white hover:bg-blue-600 transition-all"
         >
           Create Collection
         </button>
@@ -73,7 +73,7 @@ public String getRandomColor() {
     </div>
     <a href="/collection/create" class="my-4">
       <button
-        class="rounded-full py-2 px-4 bg-blue-500 text-white hover:bg-blue-600 transition-all"
+        class="rounded-lg py-2 px-4 bg-blue-500 text-white hover:bg-blue-600 transition-all"
       >
         Add Collection
       </button>

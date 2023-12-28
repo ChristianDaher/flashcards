@@ -25,7 +25,8 @@ public static String escapeHtml(String input) {
   <body>
     <div class="p-4 sm:p-8 !pb-0">
       <form id="editCollectionForm" action="/collection/<%= collection.getId() %>" class="relative inline-block min-w-80">
-        <button class="absolute -right-8 top-1 rounded-full hover:bg-gray-200 h-8 w-8 transition-all flex items-center justify-center"><img src="/edit.svg" alt="edit"></button>
+        <button type="submit" class="absolute -right-8 top-1 rounded-full hover:bg-gray-200 h-8 w-8 transition-all flex items-center justify-center"><img src="/edit.svg" alt="edit"></button>
+        <button onclick="event.preventDefault(); document.getElementById('deleteCollectionDialog').showModal();" type="button" class="absolute -right-16 top-1 rounded-full hover:bg-gray-200 h-8 w-8 transition-all flex items-center justify-center"><img src="/delete.svg" alt="delete"></button>
         <input name="title" id="title" type="text" maxlength="30" required class="text-3xl bg-transparent outline-none focus:underline focus:decoration-blue-500 focus:underline-offset-4 block" value="<%= collection.getTitle() %>"/>
         <input name="category" id="category" type="text" maxlength="30" required class=" text-center mt-2 bg-blue-500 px-4 py-2 text-white rounded-full text-sm" value="<%= collection.getCategory() %>"/>
       </form>
@@ -93,6 +94,16 @@ public static String escapeHtml(String input) {
         <% } %>
       </div>
     </div>
+    <dialog id="deleteCollectionDialog" class="bg-zinc-50 container shadow-lg rounded-lg p-6 !mt-4 md:!mt-8">
+      <h3 class="text-2xl text-center ">Delete Collection</h3>
+      <form id="deleteCollectionForm" action="/collection/<%= collection.getId() %>" class="w-100 sm:w-3/4 md:w-1/2 mx-auto">
+      <p class="text-center my-6 text-sm">Are you sure do you want to delete this collection? <br/> All its flashcards will also be deleted!</p>
+        <div class="flex justify-between items-center">
+          <button class="text-white rounded-lg bg-blue-500 hover:bg-blue-600 px-4 py-2" type="button" onclick="event.preventDefault(); document.getElementById('deleteCollectionDialog').close();">Cancel</button>
+          <button class="text-white rounded-lg bg-red-500 hover:bg-red-600 px-4 py-2" type="submit">Delete</button>
+        </div>
+      </form>
+    </dialog>
     <dialog id="addFlashcardDialog" class="bg-zinc-50 container shadow-lg rounded-lg p-6 !mt-4 md:!mt-8">
       <h3 class="text-2xl text-center mb-6">Add New Flashcard</h3>
       <form action="/collection/<%= collection.getId() %>/flashcard/create" method="post" class="w-3/4 mx-auto">
@@ -114,7 +125,7 @@ public static String escapeHtml(String input) {
           class="px-4 py-2 w-full border border-gray-300 rounded-lg mb-6"
         ></textarea>
         <div class="flex justify-between items-center">
-          <button class="text-white rounded-lg bg-red-500 hover:bg-red-600 px-4 py-2" onclick="cancelAddflashcard()">Cancel</button>
+          <button class="text-white rounded-lg bg-red-500 hover:bg-red-600 px-4 py-2" onclick="cancelAddFlashcard()">Cancel</button>
           <button class="text-white rounded-lg bg-blue-500 hover:bg-blue-600 px-4 py-2" type="submit">Create</button>
         </div>
       </form>
@@ -166,6 +177,23 @@ public static String escapeHtml(String input) {
         }
       });
     }); 
+
+    document.getElementById('deleteCollectionForm').addEventListener('submit',function(event){
+      event.preventDefault(); 
+      const form = this;
+      const formData = new FormData(form);
+      const url = form.action;
+      fetch(url, {
+        method: 'DELETE',
+        body: formData
+      }).then(response => {
+        if (response.ok) {
+          window.location.href = '/';
+        } else {
+          alert("Something went wrong!");
+        }
+      });
+    }); 
     
     const inputs = ['title', 'category'].map(id => document.getElementById(id));
     
@@ -180,7 +208,7 @@ public static String escapeHtml(String input) {
         input.size = input.value.length || 1;
     }
 
-    function cancelAddflashcard() {
+    function cancelAddFlashcard() {
       event.preventDefault(); 
       document.getElementById('createQuestion').value = "";
       document.getElementById('createAnswer').value = "";
