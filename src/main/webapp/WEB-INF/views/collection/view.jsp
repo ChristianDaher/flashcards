@@ -15,11 +15,11 @@ List<Flashcard> flashcards = (List<Flashcard>) request.getAttribute("flashcards"
   </head>
   <body>
     <div class="p-4 sm:p-8 !pb-0">
-      <h1 class="text-3xl"><%= collection.getTitle() %></h1>
-      <span
-        class="inline-block mt-2 bg-blue-500 px-4 py-2 text-white rounded-full text-sm"
-        ><%= collection.getCategory() %></span
-      >
+      <form id="editCollectionForm" action="/collection/<%= collection.getId() %>" class="relative inline-block min-w-80">
+        <button class="absolute -right-8 top-1 rounded-full hover:bg-gray-200 h-8 w-8 transition-all flex items-center justify-center"><img src="/edit.svg" alt="edit"></button>
+        <input name="title" id="title" type="text" maxlength="30" required class="text-3xl bg-transparent outline-none focus:underline focus:decoration-blue-500 focus:underline-offset-4 block" value="<%= collection.getTitle() %>"/>
+        <input name="category" id="category" type="text" maxlength="30" required class=" text-center mt-2 bg-blue-500 px-4 py-2 text-white rounded-full text-sm" value="<%= collection.getCategory() %>"/>
+      </form>
       <div class="flex gap-4 flex-wrap text-white text-sm my-4">
         <div class="rounded-lg bg-gray-400 px-4 py-2">
           <%= collection.getFlashcardCount() %> <%=
@@ -109,11 +109,42 @@ List<Flashcard> flashcards = (List<Flashcard>) request.getAttribute("flashcards"
     </dialog>
   </body>
   <script>
+    document.getElementById('editCollectionForm').addEventListener('submit',function(event){
+      event.preventDefault(); 
+      const form = this;
+      const formData = new FormData(form);
+      const url = form.action;
+      fetch(url, {
+        method: 'PUT',
+        body: formData
+      }).then(response => {
+        if (response.ok) {
+          window.location.reload();
+        } else {
+          alert("Something went wrong!");
+        }
+      });
+    }); 
+    
+    const inputs = ['title', 'category'].map(id => document.getElementById(id));
+    
+    inputs.forEach(input => {
+        adjustSize(input);
+        input.addEventListener('input', function() {
+            adjustSize(this);
+        });
+    });
+
+    function adjustSize(input){
+        input.size = input.value.length || 1;
+    }
+
     function cancelAddflashcard() {
       event.preventDefault(); 
       document.getElementById('question').value = "";
       document.getElementById('answer').value = "";
       document.getElementById('addFlashcardDialog').close();
     }
+
   </script>
 </html>

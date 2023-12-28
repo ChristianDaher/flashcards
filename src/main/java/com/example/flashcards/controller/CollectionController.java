@@ -4,10 +4,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.example.flashcards.model.User;
@@ -57,6 +60,17 @@ public class CollectionController {
         model.addAttribute("collection", collection);
         model.addAttribute("flashcards", flashcards);
         return "collection/view";
+    }
+
+    @PutMapping("/{collectionId}")
+    public ResponseEntity<Collection> edit(@PathVariable Long collectionId, @RequestParam("title") String title,
+            @RequestParam("category") String category) {
+        Collection collection = collectionService.getCollectionById(collectionId);
+        if (collection == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        Collection editedCollection = collectionService.editCollection(collection, title, category);
+        return new ResponseEntity<>(editedCollection, HttpStatus.OK);
     }
 
     @PostMapping("/{collectionId}/reset")

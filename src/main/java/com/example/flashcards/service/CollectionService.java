@@ -67,4 +67,11 @@ public class CollectionService {
         collection.setCreatedAt(LocalDateTime.now());
         collectionRepository.save(collection);
     }
+
+    public Collection editCollection(Collection collection, String title, String category) {
+        collection.setTitle(title);
+        collection.setCategory(category.toLowerCase());
+        collectionRepository.save(collection);
+        return collection;
+    }
 }
