@@ -56,4 +56,11 @@ public class FlashcardService {
     public void deleteFlashcard(Flashcard flashcard) {
         flashcardRepository.delete(flashcard);
     }
+
+    public Flashcard answerFlashcard(Flashcard flashcard, Boolean isCorrect) {
+        flashcard.setAnsweredAt(LocalDateTime.now());
+        flashcard.setIsCorrect(isCorrect);
+        flashcardRepository.save(flashcard);
+        return flashcard;
+    }
 }
