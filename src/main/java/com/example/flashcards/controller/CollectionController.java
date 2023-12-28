@@ -45,6 +45,8 @@ public class CollectionController {
 
     @PostMapping("/create")
     public String store(@RequestParam("title") String title, @RequestParam("category") String category) {
+        title = title.trim().replace("\n", " ").replace("\r", "");
+        category = category.trim().replace("\n", " ").replace("\r", "");
         User user = userService.getUserById(1L); // Should be changed later ofc
         collectionService.createCollection(user.getId(), title, category);
         return "redirect:/";
@@ -67,6 +69,8 @@ public class CollectionController {
     @PutMapping("/{collectionId}")
     public ResponseEntity<Collection> edit(@PathVariable Long collectionId, @RequestParam("title") String title,
             @RequestParam("category") String category) {
+        title = title.trim().replace("\n", " ").replace("\r", "");
+        category = category.trim().replace("\n", " ").replace("\r", "");
         Collection collection = collectionService.getCollectionById(collectionId);
         if (collection == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

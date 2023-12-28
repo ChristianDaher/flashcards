@@ -28,6 +28,8 @@ public class FlashcardController {
     @PostMapping("/create")
     public String store(@PathVariable("collectionId") Long collectionId, @RequestParam("question") String question,
             @RequestParam("answer") String answer) {
+        question = question.trim().replace("\n", " ").replace("\r", "");
+        answer = answer.trim().replace("\n", " ").replace("\r", "");
         flashcardService.createFlashcard(collectionId, question, answer);
         return "redirect:/collection/" + collectionId;
     }
@@ -36,6 +38,8 @@ public class FlashcardController {
     public ResponseEntity<Flashcard> edit(@PathVariable("flashcardId") Long flashcardId,
             @RequestParam("question") String question,
             @RequestParam("answer") String answer) {
+        question = question.trim().replace("\n", " ").replace("\r", "");
+        answer = answer.trim().replace("\n", " ").replace("\r", "");
         Flashcard flashcard = flashcardService.getFlashcardById(flashcardId);
         if (flashcard == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
