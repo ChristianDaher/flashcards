@@ -1,5 +1,6 @@
 package com.example.flashcards.controller;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,7 @@ public class CollectionController {
             return "collection/not-found";
         }
         List<Flashcard> flashcards = flashcardService.getFlashcardsByCollectionId(collectionId);
+        flashcards.sort(Comparator.comparing(Flashcard::getCreatedAt).reversed());
         model.addAttribute("collection", collection);
         model.addAttribute("flashcards", flashcards);
         return "collection/view";
