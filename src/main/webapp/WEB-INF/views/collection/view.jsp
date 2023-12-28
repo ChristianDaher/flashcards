@@ -74,6 +74,7 @@ List<Flashcard> flashcards = (List<Flashcard>) request.getAttribute("flashcards"
         </button>
         <% for (Flashcard flashcard : flashcards) { %>
         <div class="bg-white border border-gray-300 p-4 shadow-lg rounded-lg">
+          <div class="inline-block mb-2 text-xs text-white rounded-lg px-4 py-2 <%= flashcard.getIsCorrect() == null ? "bg-gray-400" : (flashcard.getIsCorrect() ? "bg-green-500" : "bg-red-500") %>"><%= flashcard.getIsCorrect() == null ? "Unanswered" : (flashcard.getIsCorrect() ? "Correct" : "Wrong") %></div>
           <h3 class="font-bold mb-2"><%= flashcard.getQuestion() %></h3>
           <p><%= flashcard.getAnswer() %></p>
         </div>
