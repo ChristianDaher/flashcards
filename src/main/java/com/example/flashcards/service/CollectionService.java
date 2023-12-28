@@ -8,6 +8,7 @@ import com.example.flashcards.repository.FlashcardRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,8 @@ public class CollectionService {
 
     public Map<String, List<Collection>> groupCollectionsByCategory(List<Collection> collections) {
         return collections.stream()
-                .collect(Collectors.groupingBy(collection -> collection.getCategory().toLowerCase()));
+                .collect(Collectors.groupingBy(collection -> collection.getCategory().toLowerCase(), TreeMap::new,
+                        Collectors.toList()));
     }
 
     public Collection getCollectionById(Long id) {

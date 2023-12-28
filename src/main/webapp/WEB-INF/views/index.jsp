@@ -24,7 +24,7 @@ public String getRandomColor() {
     <title>My Collections</title>
     <%@ include file="tailwind.jsp" %>
   </head>
-  <body class="flex h-screen p-4 sm:p-8 items-center <%= bodyClass %>">
+  <body class="flex min-h-screen p-4 sm:p-8 items-center <%= bodyClass %>">
     <% if (groupedCollections.isEmpty()) { %>
     <div class="p-8 bg-zinc-50 rounded-lg shadow-lg text-center">
       <h1 class="text-2xl">Welcome back, <%= user.getName() %>!</h1>
