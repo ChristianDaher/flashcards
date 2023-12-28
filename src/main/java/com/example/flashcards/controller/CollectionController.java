@@ -85,16 +85,30 @@ public class CollectionController {
 
     @GetMapping("/{collectionId}/play")
     public String play(@PathVariable Long collectionId, Model model) {
-        // Need more error handling in case of wrong ids and empty arrays
-        List<Flashcard> flashcards = flashcardService.getFlashcardsByCollectionId(collectionId);
-        List<Flashcard> unasweredFlashcards = flashcardService.getUnansweredFlashcards(flashcards);
-        if (!unasweredFlashcards.isEmpty()) {
+        String view = "collection/play";
+        Collection collection = collectionService.getCollectionById(collectionId);
+        List<Flashcard> flashcards = collection != null ? flashcardService.getFlashcardsByCollectionId(collectionId)
+                : null;
+        List<Flashcard> unasweredFlashcards = flashcards != null ? flashcardService.getUnansweredFlashcards(flashcards)
+                : null;
+
+        if (collection == null) {
+            model.addAttribute("errorMessage", "Collection id not found");
+            view = "collection/error";
+        } else if (flashcards == null || flashcards.isEmpty()) {
+            model.addAttribute("errorMessage", "Collection has no flashcards");
+            view = "collection/error";
+        } else if (unasweredFlashcards == null || unasweredFlashcards.isEmpty()) {
+            model.addAttribute("errorMessage",
+                    "All the flashcards inside this collection are answered, <br/> please reset the collection to play again");
+            view = "collection/error";
+        } else {
             Random random = new Random();
             Flashcard randomFlashcard = unasweredFlashcards.get(random.nextInt(unasweredFlashcards.size()));
             model.addAttribute("flashcard", randomFlashcard);
-            return "collection/play";
         }
-        return "redirect:/";
+
+        return view;
     }
 
 }

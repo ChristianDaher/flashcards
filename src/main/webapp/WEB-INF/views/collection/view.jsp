@@ -6,6 +6,15 @@
 Collection collection = (Collection) request.getAttribute("collection");
 List<Flashcard> flashcards = (List<Flashcard>) request.getAttribute("flashcards");
 %>
+<%!
+public static String escapeHtml(String input) {
+  return input.replace("&", "&amp;")
+              .replace("<", "&lt;")
+              .replace(">", "&gt;")
+              .replace("\"", "&quot;")
+              .replace("'", "&#x27;");
+}
+%> 
 <!DOCTYPE html>
 <html>
   <head>
@@ -76,7 +85,7 @@ List<Flashcard> flashcards = (List<Flashcard>) request.getAttribute("flashcards"
         <div class="bg-white border border-gray-300 p-4 shadow-lg rounded-lg">
           <div class="flex items-center justify-between">
             <div class="mb-2 text-xs text-white rounded-lg px-4 py-2 <%= flashcard.getIsCorrect() == null ? "bg-gray-400" : (flashcard.getIsCorrect() ? "bg-green-500" : "bg-red-500") %>"><%= flashcard.getIsCorrect() == null ? "Unanswered" : (flashcard.getIsCorrect() ? "Correct" : "Wrong") %></div>
-            <button onclick="openEditFlashcardModal('<%= flashcard.getCollectionId() %>', '<%= flashcard.getId() %>', '<%= flashcard.getQuestion() %>', '<%= flashcard.getAnswer() %>')" class="rounded-full hover:bg-gray-200 h-8 w-8 transition-all flex items-center justify-center"><img src="/edit.svg" alt="edit"></button>
+            <button onclick="openEditFlashcardModal('<%= flashcard.getCollectionId() %>', '<%= flashcard.getId() %>', '<%= escapeHtml(flashcard.getQuestion()) %>', '<%= escapeHtml(flashcard.getAnswer()) %>')" class="rounded-full hover:bg-gray-200 h-8 w-8 transition-all flex items-center justify-center"><img src="/edit.svg" alt="edit"></button>
           </div>
           <h3 class="font-bold mb-2"><%= flashcard.getQuestion() %></h3>
           <p><%= flashcard.getAnswer() %></p>
