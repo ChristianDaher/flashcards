@@ -41,4 +41,19 @@ public class FlashcardService {
         flashcard.setCreatedAt(LocalDateTime.now());
         flashcardRepository.save(flashcard);
     }
+
+    public Flashcard getFlashcardById(Long id) {
+        return flashcardRepository.findById(id).orElse(null);
+    }
+
+    public Flashcard editFlashcard(Flashcard flashcard, String question, String answer) {
+        flashcard.setQuestion(question);
+        flashcard.setAnswer(answer);
+        resetFlashcard(flashcard);
+        return flashcard;
+    }
+
+    public void deleteFlashcard(Flashcard flashcard) {
+        flashcardRepository.delete(flashcard);
+    }
 }

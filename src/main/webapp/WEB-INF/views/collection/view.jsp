@@ -74,7 +74,10 @@ List<Flashcard> flashcards = (List<Flashcard>) request.getAttribute("flashcards"
         </button>
         <% for (Flashcard flashcard : flashcards) { %>
         <div class="bg-white border border-gray-300 p-4 shadow-lg rounded-lg">
-          <div class="inline-block mb-2 text-xs text-white rounded-lg px-4 py-2 <%= flashcard.getIsCorrect() == null ? "bg-gray-400" : (flashcard.getIsCorrect() ? "bg-green-500" : "bg-red-500") %>"><%= flashcard.getIsCorrect() == null ? "Unanswered" : (flashcard.getIsCorrect() ? "Correct" : "Wrong") %></div>
+          <div class="flex items-center justify-between">
+            <div class="mb-2 text-xs text-white rounded-lg px-4 py-2 <%= flashcard.getIsCorrect() == null ? "bg-gray-400" : (flashcard.getIsCorrect() ? "bg-green-500" : "bg-red-500") %>"><%= flashcard.getIsCorrect() == null ? "Unanswered" : (flashcard.getIsCorrect() ? "Correct" : "Wrong") %></div>
+            <button onclick="openEditFlashcardModal('<%= flashcard.getCollectionId() %>', '<%= flashcard.getId() %>', '<%= flashcard.getQuestion() %>', '<%= flashcard.getAnswer() %>')" class="rounded-full hover:bg-gray-200 h-8 w-8 transition-all flex items-center justify-center"><img src="/edit.svg" alt="edit"></button>
+          </div>
           <h3 class="font-bold mb-2"><%= flashcard.getQuestion() %></h3>
           <p><%= flashcard.getAnswer() %></p>
         </div>
@@ -84,18 +87,18 @@ List<Flashcard> flashcards = (List<Flashcard>) request.getAttribute("flashcards"
     <dialog id="addFlashcardDialog" class="bg-zinc-50 container shadow-lg rounded-lg p-6 !mt-4 md:!mt-8">
       <h3 class="text-2xl text-center mb-6">Add New Flashcard</h3>
       <form action="/collection/<%= collection.getId() %>/flashcard/create" method="post" class="w-3/4 mx-auto">
-        <label for="question" class="mb-1 block">Question:</label>
+        <label for="createQuestion" class="mb-1 block">Question:</label>
         <input
           type="text"
-          id="question"
+          id="createQuestion"
           name="question"
           required
           autofocus
           class="px-4 py-2 w-full border border-gray-300 rounded-lg mb-4"
         />
-        <label for="answer" class="mb-1 block">Answer:</label>
+        <label for="createAnswer" class="mb-1 block">Answer:</label>
         <textarea
-          id="answer"
+          id="createAnswer"
           name="answer"
           required
           rows="4"
@@ -104,6 +107,35 @@ List<Flashcard> flashcards = (List<Flashcard>) request.getAttribute("flashcards"
         <div class="flex justify-between items-center">
           <button class="text-white rounded-lg bg-red-500 hover:bg-red-600 px-4 py-2" onclick="cancelAddflashcard()">Cancel</button>
           <button class="text-white rounded-lg bg-blue-500 hover:bg-blue-600 px-4 py-2" type="submit">Create</button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="editFlashcardDialog" class="bg-zinc-50 container shadow-lg rounded-lg p-6 !mt-4 md:!mt-8">
+      <h3 class="text-2xl text-center mb-6">Edit Flashcard</h3>
+      <form id="editFlashcardForm" class="w-3/4 mx-auto">
+        <label for="editQuestion" class="mb-1 block">Question:</label>
+        <input
+          type="text"
+          id="editQuestion"
+          name="question"
+          required
+          autofocus
+          class="px-4 py-2 w-full border border-gray-300 rounded-lg mb-4"
+        />
+        <label for="editAnswer" class="mb-1 block">Answer:</label>
+        <textarea
+          id="editAnswer"
+          name="answer"
+          required
+          rows="4"
+          class="px-4 py-2 w-full border border-gray-300 rounded-lg mb-6"
+        ></textarea>
+        <div class="flex justify-between items-center">
+          <button class="text-white rounded-lg bg-red-500 hover:bg-red-600 px-4 py-2" type="button" onclick="deleteFlashcard()">Delete</button>
+          <div class="flex gap-4 items-center">
+            <button class="text-white rounded-lg bg-red-500 hover:bg-red-600 px-4 py-2" type="button" onclick="event.preventDefault(); document.getElementById('editFlashcardDialog').close();">Cancel</button>
+            <button class="text-white rounded-lg bg-blue-500 hover:bg-blue-600 px-4 py-2" type="submit">Edit</button>
+          </div>
         </div>
       </form>
     </dialog>
@@ -141,10 +173,50 @@ List<Flashcard> flashcards = (List<Flashcard>) request.getAttribute("flashcards"
 
     function cancelAddflashcard() {
       event.preventDefault(); 
-      document.getElementById('question').value = "";
-      document.getElementById('answer').value = "";
+      document.getElementById('createQuestion').value = "";
+      document.getElementById('createAnswer').value = "";
       document.getElementById('addFlashcardDialog').close();
     }
 
+    document.getElementById('editFlashcardForm').addEventListener('submit',function(event){
+      event.preventDefault(); 
+      const form = this;
+      const formData = new FormData(form);
+      const url = form.action;
+      fetch(url, {
+        method: 'PUT',
+        body: formData
+      }).then(response => {
+        if (response.ok) {
+          window.location.reload();
+        } else {
+          alert("Something went wrong!");
+        }
+      });
+    }); 
+
+    function openEditFlashcardModal(collectionId, id,question,answer){
+      document.getElementById('editFlashcardDialog').showModal();
+      document.getElementById('editQuestion').value = question;
+      document.getElementById('editAnswer').value = answer;
+      document.getElementById('editFlashcardForm').action = '/collection/' + collectionId + '/flashcard/' + id;
+    }
+
+    function deleteFlashcard(){
+      event.preventDefault(); 
+      const form = document.getElementById('editFlashcardDialog').querySelector('form');
+      const formData = new FormData(form);
+      const url = form.action;
+      fetch(url, {
+        method: 'DELETE',
+        body: formData
+      }).then(response => {
+        if (response.ok) {
+          window.location.reload();
+        } else {
+          alert("Something went wrong!");
+        }
+      });
+    }
   </script>
 </html>

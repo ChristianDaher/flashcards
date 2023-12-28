@@ -42,6 +42,9 @@ public class CollectionService {
 
     public Collection getCollectionById(Long id) {
         Collection collection = collectionRepository.findById(id).orElse(null);
+        if (collection == null) {
+            return null;
+        }
         List<Flashcard> flashcards = flashcardRepository.findAllByCollectionId(id);
         int answeredFlashcardCount = 0;
         int correctlyAnsweredFlashcardCount = 0;

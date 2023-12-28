@@ -53,7 +53,8 @@ public class CollectionController {
     public String view(@PathVariable Long collectionId, Model model) {
         Collection collection = collectionService.getCollectionById(collectionId);
         if (collection == null) {
-            return "collection/not-found";
+            model.addAttribute("errorMessage", "Collection id not found");
+            return "collection/error";
         }
         List<Flashcard> flashcards = flashcardService.getFlashcardsByCollectionId(collectionId);
         flashcards.sort(Comparator.comparing(Flashcard::getCreatedAt).reversed());
