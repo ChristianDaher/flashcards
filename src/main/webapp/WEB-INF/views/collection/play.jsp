@@ -56,26 +56,36 @@
 
     function goBack() {
       const previous = document.referrer;
-      if (previous == null || previous == "" || previous == window.location.href) window.location.href = "/";
+      if (
+        previous == null ||
+        previous == "" ||
+        previous == window.location.href
+      )
+        window.location.href = "/";
       else window.location.href = previous;
     }
 
-    function markAnswer(answer){
-      fetch('/collection/<%= flashcard.getCollectionId() %>/flashcard/<%= flashcard.getId() %>/answer', {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          answer: answer,
-        })
-      }).then(response => {
-        if (response.ok) {
-          window.location.reload();
+    function markAnswer(answer) {
+      fetch(
+        "/collection/<%= flashcard.getCollectionId() %>/flashcard/<%= flashcard.getId() %>/answer",
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            answer: answer,
+          }),
         }
-      }).catch(() => {
-        alert('Something went wrong')
-      })
+      )
+        .then((response) => {
+          if (response.ok) {
+            window.location.reload();
+          }
+        })
+        .catch(() => {
+          alert("Something went wrong");
+        });
     }
   </script>
 </html>

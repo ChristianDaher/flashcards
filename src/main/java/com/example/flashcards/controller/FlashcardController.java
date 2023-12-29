@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.flashcards.model.Flashcard;
 import com.example.flashcards.service.FlashcardService;
+import com.example.flashcards.util.InputUtil;
 
 @Controller
 @RequestMapping("/collection/{collectionId}/flashcard")
@@ -32,8 +33,8 @@ public class FlashcardController {
     @PostMapping("/create")
     public String store(@PathVariable("collectionId") Long collectionId, @RequestParam("question") String question,
             @RequestParam("answer") String answer) {
-        question = question.trim().replace("\n", " ").replace("\r", "");
-        answer = answer.trim().replace("\n", " ").replace("\r", "");
+        question = InputUtil.sanitize(question);
+        answer = InputUtil.sanitize(answer);
         flashcardService.createFlashcard(collectionId, question, answer);
         return "redirect:/collection/" + collectionId;
     }
@@ -42,12 +43,9 @@ public class FlashcardController {
     public ResponseEntity<Flashcard> edit(@PathVariable("flashcardId") Long flashcardId,
             @RequestParam("question") String question,
             @RequestParam("answer") String answer) {
-        question = question.trim().replace("\n", " ").replace("\r", "");
-        answer = answer.trim().replace("\n", " ").replace("\r", "");
+        question = InputUtil.sanitize(question);
+        answer = InputUtil.sanitize(answer);
         Flashcard flashcard = flashcardService.getFlashcardById(flashcardId);
-        if (flashcard == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
         Flashcard editedFlashcard = flashcardService.editFlashcard(flashcard, question, answer);
         return new ResponseEntity<>(editedFlashcard, HttpStatus.OK);
     }
@@ -55,19 +53,14 @@ public class FlashcardController {
     @DeleteMapping("/{flashcardId}")
     public ResponseEntity<Flashcard> delete(@PathVariable("flashcardId") Long flashcardId) {
         Flashcard flashcard = flashcardService.getFlashcardById(flashcardId);
-        if (flashcard == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
         flashcardService.deleteFlashcard(flashcard);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PatchMapping("/{flashcardId}/answer")
-    public ResponseEntity<Flashcard> markAsCorrect(@PathVariable("flashcardId") Long flashcardId, @RequestBody Map<String, Boolean> answerMap) {
+    public ResponseEntity<Flashcard> markAsCorrect(@PathVariable("flashcardId") Long flashcardId,
+            @RequestBody Map<String, Boolean> answerMap) {
         Flashcard flashcard = flashcardService.getFlashcardById(flashcardId);
-        if (flashcard == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
         Boolean answer = answerMap.get("answer");
         if (answer == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

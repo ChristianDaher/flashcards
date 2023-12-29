@@ -21,6 +21,7 @@ import com.example.flashcards.service.CollectionService;
 import com.example.flashcards.service.FlashcardService;
 import com.example.flashcards.service.UserService;
 import org.springframework.ui.Model;
+import com.example.flashcards.util.InputUtil;
 
 @Controller
 @RequestMapping("/collection")
@@ -45,8 +46,8 @@ public class CollectionController {
 
     @PostMapping("/create")
     public String store(@RequestParam("title") String title, @RequestParam("category") String category) {
-        title = title.trim().replace("\n", " ").replace("\r", "");
-        category = category.trim().replace("\n", " ").replace("\r", "");
+        title = InputUtil.sanitize(title);
+        category = InputUtil.sanitize(category);
         User user = userService.getUserById(1L); // Should be changed later ofc
         collectionService.createCollection(user.getId(), title, category);
         return "redirect:/";
@@ -55,10 +56,6 @@ public class CollectionController {
     @GetMapping("/{collectionId}")
     public String view(@PathVariable Long collectionId, Model model) {
         Collection collection = collectionService.getCollectionById(collectionId);
-        if (collection == null) {
-            model.addAttribute("errorMessage", "Collection id not found");
-            return "collection/error";
-        }
         List<Flashcard> flashcards = flashcardService.getFlashcardsByCollectionId(collectionId);
         flashcards.sort(Comparator.comparing(Flashcard::getCreatedAt).reversed());
         model.addAttribute("collection", collection);
@@ -69,12 +66,9 @@ public class CollectionController {
     @PutMapping("/{collectionId}")
     public ResponseEntity<Collection> edit(@PathVariable Long collectionId, @RequestParam("title") String title,
             @RequestParam("category") String category) {
-        title = title.trim().replace("\n", " ").replace("\r", "");
-        category = category.trim().replace("\n", " ").replace("\r", "");
+        title = InputUtil.sanitize(title);
+        category = InputUtil.sanitize(category);
         Collection collection = collectionService.getCollectionById(collectionId);
-        if (collection == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
         Collection editedCollection = collectionService.editCollection(collection, title, category);
         return new ResponseEntity<>(editedCollection, HttpStatus.OK);
     }
@@ -82,9 +76,6 @@ public class CollectionController {
     @DeleteMapping("/{collectionId}")
     public ResponseEntity<Collection> delete(@PathVariable Long collectionId) {
         Collection collection = collectionService.getCollectionById(collectionId);
-        if (collection == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
         collectionService.deleteCollection(collection);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -101,22 +92,18 @@ public class CollectionController {
     @GetMapping("/{collectionId}/play")
     public String play(@PathVariable Long collectionId, Model model) {
         String view = "collection/play";
-        Collection collection = collectionService.getCollectionById(collectionId);
-        List<Flashcard> flashcards = collection != null ? flashcardService.getFlashcardsByCollectionId(collectionId)
-                : null;
+        List<Flashcard> flashcards = flashcardService.getFlashcardsByCollectionId(collectionId);
         List<Flashcard> unasweredFlashcards = flashcards != null ? flashcardService.getUnansweredFlashcards(flashcards)
                 : null;
 
-        if (collection == null) {
-            model.addAttribute("errorMessage", "Collection id not found");
-            view = "collection/error";
-        } else if (flashcards == null || flashcards.isEmpty()) {
+        if (flashcards == null || flashcards.isEmpty()) {
             model.addAttribute("errorMessage", "Collection has no flashcards");
-            view = "collection/error";
+            view = "error";
         } else if (unasweredFlashcards == null || unasweredFlashcards.isEmpty()) {
             model.addAttribute("errorMessage",
                     "All the flashcards inside this collection are answered, <br/> please reset the collection to play again");
-            view = "collection/error";
+            model.addAttribute("backLink", "/collection/" + collectionId);
+            view = "error";
         } else {
             Random random = new Random();
             Flashcard randomFlashcard = unasweredFlashcards.get(random.nextInt(unasweredFlashcards.size()));
