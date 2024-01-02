@@ -23,6 +23,7 @@ import com.example.flashcards.service.UserService;
 import org.springframework.ui.Model;
 import com.example.flashcards.util.InputUtil;
 
+// This is the collection controller, it handles all the routes that start with /collection
 @Controller
 @RequestMapping("/collection")
 public class CollectionController {
@@ -39,11 +40,13 @@ public class CollectionController {
         this.flashcardService = flashcardService;
     }
 
+    // Route to view the create a collection page
     @GetMapping("/create")
     public String create() {
         return "collection/create";
     }
 
+    // Route to actually create a collection
     @PostMapping("/create")
     public String store(@RequestParam("title") String title, @RequestParam("category") String category) {
         title = InputUtil.sanitize(title);
@@ -53,6 +56,7 @@ public class CollectionController {
         return "redirect:/";
     }
 
+    // Route to view a collection
     @GetMapping("/{collectionId}")
     public String view(@PathVariable Long collectionId, Model model) {
         Collection collection = collectionService.getCollectionById(collectionId);
@@ -63,6 +67,7 @@ public class CollectionController {
         return "collection/view";
     }
 
+    // Route to edit a collection
     @PutMapping("/{collectionId}")
     public ResponseEntity<Collection> edit(@PathVariable Long collectionId, @RequestParam("title") String title,
             @RequestParam("category") String category) {
@@ -73,6 +78,7 @@ public class CollectionController {
         return new ResponseEntity<>(editedCollection, HttpStatus.OK);
     }
 
+    // Route to delete a collection and all its flashcards
     @DeleteMapping("/{collectionId}")
     public ResponseEntity<Collection> delete(@PathVariable Long collectionId) {
         Collection collection = collectionService.getCollectionById(collectionId);
@@ -80,6 +86,7 @@ public class CollectionController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    // Route to reset a collection's flashcards
     @PostMapping("/{collectionId}/reset")
     public String reset(@PathVariable Long collectionId) {
         List<Flashcard> flashcards = flashcardService.getFlashcardsByCollectionId(collectionId);
@@ -89,6 +96,7 @@ public class CollectionController {
         return "redirect:/collection/" + collectionId;
     }
 
+    // Route to play a collection
     @GetMapping("/{collectionId}/play")
     public String play(@PathVariable Long collectionId, Model model) {
         String view = "collection/play";

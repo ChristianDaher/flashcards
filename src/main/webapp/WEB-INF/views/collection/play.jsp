@@ -4,6 +4,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <!-- This is the page you see when you click on a collection to play it -->
     <meta charset="UTF-8" />
     <title>Collection - Play</title>
     <%@ include file="../tailwind.jsp" %>

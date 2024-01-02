@@ -14,6 +14,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+// This is the collection interceptor, it handles all the routes that start with /collection/{collectionId}
 @Component
 public class CollectionInterceptor implements HandlerInterceptor {
 
@@ -24,6 +25,7 @@ public class CollectionInterceptor implements HandlerInterceptor {
         this.collectionService = collectionService;
     }
 
+    // This method will forward the request to the error page with the error message
     private boolean forwardWithError(HttpServletRequest request, HttpServletResponse response, String errorMessage)
             throws ServletException, IOException {
         request.setAttribute("errorMessage", errorMessage);
@@ -32,6 +34,7 @@ public class CollectionInterceptor implements HandlerInterceptor {
         return false;
     }
 
+    // This method will check if the collection id is valid once a request is made to a route that starts with /collection/{collectionId}
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
         String path = request.getServletPath();

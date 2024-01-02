@@ -6,9 +6,10 @@
 <% 
 User user = (User) request.getAttribute("user");
 Map<String, List<Collection>> groupedCollections = (Map<String, List<Collection>>) request.getAttribute("groupedCollections");
-String bodyClass = groupedCollections.isEmpty() ? "justify-center" : "flex-col gap-6";
+String bodyClass = groupedCollections.isEmpty() ? "justify-center" : "flex-col gap-6"; // Change the styling based on if the collections are empty or not
 %>
 <%!
+// this is a function to randomly color the category tags, refresh the page to see the colors change
 public String getRandomColor() {
   List<String> colors = List.of("red", "orange", "amber", "yellow", "lime", "green", "emerald", "teal", "cyan", "sky", "blue", "indigo", "violet", "purple", "fuchsia", "pink", "rose");
   List<String> shades = List.of("300", "400", "500", "600", "700", "800", "900", "950");
@@ -20,11 +21,14 @@ public String getRandomColor() {
 <!DOCTYPE html>
 <html>
   <head>
+    <!-- The page you see when you first open the project -->
     <meta charset="UTF-8" />
     <title>My Collections</title>
     <%@ include file="tailwind.jsp" %>
   </head>
   <body class="flex min-h-screen p-4 sm:p-8 items-center <%= bodyClass %>">
+
+    <!-- You will only see this when there are no collections -->
     <% if (groupedCollections.isEmpty()) { %>
     <div class="p-8 bg-zinc-50 rounded-lg shadow-lg text-center">
       <h1 class="text-2xl">Welcome back, <%= user.getName() %>!</h1>
@@ -39,7 +43,9 @@ public String getRandomColor() {
         </button>
       </a>
     </div>
+
     <% } else { %>
+    <!-- This is what you will be usually seeing -->
     <div class="container bg-zinc-50 rounded-lg shadow-lg text-center py-4">
       <h1 class="text-2xl text-center">Welcome back, <%= user.getName() %>!</h1>
     </div>
@@ -79,5 +85,6 @@ public String getRandomColor() {
       </button>
     </a>
     <% } %>
+
   </body>
 </html>

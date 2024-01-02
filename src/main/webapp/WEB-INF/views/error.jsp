@@ -10,6 +10,7 @@ if (backLink == null || backLink.isEmpty()) {
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- This is the error page, it takes an error message and a back link as parameters to pass -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Error</title>

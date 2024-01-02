@@ -7,6 +7,7 @@ Collection collection = (Collection) request.getAttribute("collection");
 List<Flashcard> flashcards = (List<Flashcard>) request.getAttribute("flashcards");
 %>
 <%!
+// To fix special characters errors in the text area mainly
 public static String escapeHtml(String input) {
   return input.replace("&", "&amp;")
               .replace("<", "&lt;")
@@ -18,6 +19,7 @@ public static String escapeHtml(String input) {
 <!DOCTYPE html>
 <html>
   <head>
+    <!-- This is the page to view the collection and its flashcards, and do a bunch of CRUD actions -->
     <meta charset="UTF-8" />
     <title>Collection - View</title>
     <%@ include file="../tailwind.jsp" %>

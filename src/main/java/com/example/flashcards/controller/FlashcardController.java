@@ -19,6 +19,7 @@ import com.example.flashcards.model.Flashcard;
 import com.example.flashcards.service.FlashcardService;
 import com.example.flashcards.util.InputUtil;
 
+// This is the flashcard controller, it handles all the routes that start with /collection/{collectionId}/flashcard
 @Controller
 @RequestMapping("/collection/{collectionId}/flashcard")
 public class FlashcardController {
@@ -30,6 +31,7 @@ public class FlashcardController {
         this.flashcardService = flashcardService;
     }
 
+    // Route to create a flashcard
     @PostMapping("/create")
     public String store(@PathVariable("collectionId") Long collectionId, @RequestParam("question") String question,
             @RequestParam("answer") String answer) {
@@ -39,6 +41,7 @@ public class FlashcardController {
         return "redirect:/collection/" + collectionId;
     }
 
+    // Route to edit a flashcard
     @PutMapping("/{flashcardId}")
     public ResponseEntity<Flashcard> edit(@PathVariable("flashcardId") Long flashcardId,
             @RequestParam("question") String question,
@@ -50,6 +53,7 @@ public class FlashcardController {
         return new ResponseEntity<>(editedFlashcard, HttpStatus.OK);
     }
 
+    // Route to delete a flashcard
     @DeleteMapping("/{flashcardId}")
     public ResponseEntity<Flashcard> delete(@PathVariable("flashcardId") Long flashcardId) {
         Flashcard flashcard = flashcardService.getFlashcardById(flashcardId);
@@ -57,6 +61,7 @@ public class FlashcardController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    // Route to mark a flashcard as correct or wrong
     @PatchMapping("/{flashcardId}/answer")
     public ResponseEntity<Flashcard> markAsCorrect(@PathVariable("flashcardId") Long flashcardId,
             @RequestBody Map<String, Boolean> answerMap) {

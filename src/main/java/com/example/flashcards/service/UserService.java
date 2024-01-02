@@ -5,6 +5,7 @@ import com.example.flashcards.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+// This handles all the business logic related to users
 @Service
 public class UserService {
 
@@ -15,6 +16,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    // This method returns user by id
     public User getUserById(Long id) {
         return userRepository.findById(id)
                 .orElse(null);

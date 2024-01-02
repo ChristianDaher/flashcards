@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <head>
+    <!-- Import tailwind in this file, and including this file in all other files for styling, for more efficiency. -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style type="text/tailwindcss">
         body{

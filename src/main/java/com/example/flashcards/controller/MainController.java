@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+// This is the main controller, it handles the main route
 @Controller
 public class MainController {
 
@@ -23,6 +24,7 @@ public class MainController {
         this.collectionService = collectionService;
     }
 
+    // Route to view the main page,  it will show all the collections of the user
     @GetMapping(value = { "/", "/index", "/home", "/collections" })
     public String index(Model model) {
         // Change id to authenticated user id after implementing authentication

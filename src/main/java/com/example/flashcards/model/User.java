@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+// Password will be used if user authentication is implemented
 @Entity
 @Table(name = "users")
 public class User {

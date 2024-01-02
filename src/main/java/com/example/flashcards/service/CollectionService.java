@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+// This handles all the business logic related to collections
 @Service
 public class CollectionService {
 
@@ -25,6 +26,7 @@ public class CollectionService {
         this.flashcardRepository = flashcardRepository;
     }
 
+    // This method will return all the collections of a user
     public List<Collection> getCollectionsByUserId(Long userId) {
         List<Collection> collections = collectionRepository.findAllByUserId(userId);
         for (Collection collection : collections) {
@@ -34,12 +36,14 @@ public class CollectionService {
         return collections;
     }
 
+    // This method will return grouped collections by category
     public Map<String, List<Collection>> groupCollectionsByCategory(List<Collection> collections) {
         return collections.stream()
                 .collect(Collectors.groupingBy(collection -> collection.getCategory().toLowerCase(), TreeMap::new,
                         Collectors.toList()));
     }
 
+    // This method will return a collection by id with its flashcard count, answered flashcard count and correctly answered flashcard count
     public Collection getCollectionById(Long id) {
         Collection collection = collectionRepository.findById(id).orElse(null);
         if (collection == null) {
@@ -62,6 +66,7 @@ public class CollectionService {
         return collection;
     }
 
+    // This method will create a new collection
     public void createCollection(Long userId, String title, String category) {
         Collection collection = new Collection();
         collection.setUserId(userId);
@@ -71,6 +76,7 @@ public class CollectionService {
         collectionRepository.save(collection);
     }
 
+    // This method will edit a given collection
     public Collection editCollection(Collection collection, String title, String category) {
         collection.setTitle(title);
         collection.setCategory(category.toLowerCase());
@@ -78,6 +84,7 @@ public class CollectionService {
         return collection;
     }
 
+    // This method will delete a collection
     public void deleteCollection(Collection collection) {
         collectionRepository.delete(collection);
     }
