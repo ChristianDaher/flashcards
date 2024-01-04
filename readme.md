@@ -162,7 +162,7 @@ Each model is associated with a repository that extends the `JpaRepository` inte
 
 Each model is associated with a service that uses the corresponding repository. These services encapsulate the business logic of our application, keeping it separate from the presentation logic in the controllers and the data access logic in the repositories.
 
-Services use the methods provided by the repositories to interact with the database. They can perform operations that involve multiple steps or depend on the results of previous operations. For example, in [`CollectionService`](./src/main/java/com/example/flashcards/service/CollectionService.java#L70-L77), the method `Collection createCollection(Collection collection, Long userId);` is designed to create a new collection and associate it with a user.
+Services use the methods provided by the repositories to interact with the database. They can perform operations that involve multiple steps or depend on the results of previous operations. For example, in [`CollectionService`](./src/main/java/com/example/flashcards/service/CollectionService.java#L69-L77), the method `Collection createCollection(Collection collection, Long userId);` is designed to create a new collection and associate it with a user.
 
 Services also handle error checking and validation. For instance, before creating a new collection, the `createCollection` method might check if a collection with the same name already exists for the user. If it does, the method could throw an exception or return an error message.
 
