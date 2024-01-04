@@ -79,21 +79,35 @@ Moreover, a meta-analysis by Dunlosky et al. (2013) found that self-testing, a t
 
 ## Technology Stack
 
-- <span style="color: #69B0FF">**Backend**</span>: [Spring Boot](https://spring.io/projects/spring-boot) - A powerful framework that simplifies the setup and development of Spring applications. It provides default configurations and a stand-alone environment to run applications.
+- **Backend**: [Spring Boot](https://spring.io/projects/spring-boot) - A powerful framework that simplifies the setup and development of Spring applications. It provides default configurations and a stand-alone environment to run applications.
 
-- <span style="color: #69B0FF">**Frontend Templates**</span>: [JSP](https://docs.oracle.com/javaee/5/tutorial/doc/bnagx.html) - JavaServer Pages (JSP) is a technology used for building dynamic web pages based on HTML, XML, or other document types. It is used in this project to manage and render the views.
+- **Frontend Templates**: [JSP](https://docs.oracle.com/javaee/5/tutorial/doc/bnagx.html) - JavaServer Pages (JSP) is a technology used for building dynamic web pages based on HTML, XML, or other document types. It is used in this project to manage and render the views.
 
-- <span style="color: #69B0FF">**Frontend Design**</span>: [Tailwind CSS](https://tailwindcss.com/) - A utility-first CSS framework that is highly customizable and allows for building modern and responsive designs. It is used in this project for styling the frontend.
+- **Frontend Design**: [Tailwind CSS](https://tailwindcss.com/) - A utility-first CSS framework that is highly customizable and allows for building modern and responsive designs. It is used in this project for styling the frontend.
 
-- <span style="color: #69B0FF">**Database**</span>: [MySQL](https://www.mysql.com/) - An open-source relational database management system. In this project, it is used for data persistence and to perform CRUD operations.
+- **Database**: [MySQL](https://www.mysql.com/) - An open-source relational database management system. In this project, it is used for data persistence and to perform CRUD operations.
 
-- <span style="color: #69B0FF">**Version Control**</span>: [Git](https://git-scm.com/) / [GitHub](https://github.com/) - Git is a distributed version control system that tracks changes to source code. GitHub is a cloud-based hosting service for Git repositories. In this project, they are used for version control and source code management.
+- **Version Control**: [Git](https://git-scm.com/) / [GitHub](https://github.com/) - Git is a distributed version control system that tracks changes to source code. GitHub is a cloud-based hosting service for Git repositories. In this project, they are used for version control and source code management.
 
-- <span style="color: #69B0FF">**Build Tool**</span>: [Maven](https://maven.apache.org/) - A build automation tool used primarily for Java projects. In this project, it is used to manage dependencies and build the project.
+- **Build Tool**: [Maven](https://maven.apache.org/) - A build automation tool used primarily for Java projects. In this project, it is used to manage dependencies and build the project.
 
 ## Features
 
-- <span style="color: #69B0FF">**Data Management**</span>: CRUD (Create, Read, Update, Delete) operations for managing data in the MySQL database. You can do all these actions for both Models (Collection & Flashcard)
+- **Data Management**: Perform CRUD (Create, Read, Update, Delete) operations with RESTful APIs on MySQL database. This applies to both Models: Collection & Flashcard.
+
+- **User-Friendly Interface**: The application's navigation is intuitive, using icons and buttons for guidance. Arrows for page navigation, pencils for editing, and bins for deletion.
+
+- **Responsive Design**: The application is designed to be fully responsive. It adapts its layout to different screen sizes, ensuring a seamless user experience on all devices, from desktops to mobile phones. This is made possible by Tailwind CSS, which simplifies responsive design by reducing the need for numerous media queries and CSS selectors.
+
+- **Error Handling**: The application provides robust error handling. It not only presents user-friendly error messages but also logs detailed error information for debugging purposes. Invalid URL navigation is prevented; users attempting to access non-existent routes are redirected to an error page with a clear explanation of the issue.
+
+- **Scalability**: The application is designed with scalability in mind. The well-structured codebase and class-based architecture allow for rapid and straightforward changes. This design makes the addition of new features a seamless process, ensuring the application can grow and evolve over time.
+
+- **Database Migrations & Seeders**: The application uses the Flyway dependency for managing database migrations and seeders. This tool automates the creation of database tables and the insertion of sample data, enabling immediate testing of the application. This approach ensures consistency across different environments and simplifies the process of setting up a new instance of the application.
+
+- **MVC Architecture**: The application follows the Model-View-Controller (MVC) architectural pattern. This design separates the application into three interconnected components, allowing for efficient code organization and modular development. The Model corresponds to the application data and business logic, the View to the user interface and presentation of data, and the Controller to the interface between Model and View.
+
+- **ORM Usage**: The application utilizes the Java Persistence API (JPA), an Object-Relational Mapping (ORM) tool. JPA simplifies data manipulation by converting data between incompatible type systems in relational databases and object-oriented programming languages. This allows the application to interact with the database using object-oriented syntax, which enhances readability and maintainability of the code. The use of JPA also facilitates easier data management and transactions.
 
 ## Usage
 
@@ -101,14 +115,16 @@ Moreover, a meta-analysis by Dunlosky et al. (2013) found that self-testing, a t
 
 ## Future Improvements & Fixes
 
-- <span style="color: #69B0FF">**Light/Dark Mode Support**</span>: Plan to implement a feature that allows users to toggle between light and dark themes. This will enhance the user experience, especially for those who prefer a darker interface during night-time usage.
+- **Light/Dark Mode Support**: Plan to implement a feature that allows users to toggle between light and dark themes. This will enhance the user experience, especially for those who prefer a darker interface during night-time usage.
 
-- <span style="color: #69B0FF">**User Authentication**</span>: Intend to add a secure login and registration system to safeguard user data and provide personalized experiences.
+- **User Authentication**: Intend to add a secure login and registration system to safeguard user data and provide personalized experiences.
 
-- <span style="color: #69B0FF">**Authorization**</span>: After implementing user registration, we will ensure that users can only update, edit, or delete their own collections and flashcards, preventing unauthorized access and modification of other users' data.
+- **Authorization**: After implementing user registration, we will ensure that users can only update, edit, or delete their own collections and flashcards, preventing unauthorized access and modification of other users' data.
 
-- <span style="color: #69B0FF">**Flashcard Sharing**</span>: Aim to develop a feature enabling users to view and learn from flashcards created by others, fostering a collaborative learning environment.
+- **Flashcard Sharing**: Aim to develop a feature enabling users to view and learn from flashcards created by others, fostering a collaborative learning environment.
 
-- <span style="color: #69B0FF">**Error Handling**</span>: Plan to improve the error handling system. Currently, all errors redirect to a generic error page. The goal is to provide more specific error messages, especially when a user answers the last flashcard in a collection, to enhance user experience, understanding and troubleshooting.
+- **Error Handling**: Plan to improve the error handling system. Currently, all errors redirect to a generic error page. The goal is to provide more specific error messages, especially when a user answers the last flashcard in a collection, to enhance user experience, understanding and troubleshooting.
 
-- <span style="color: #69B0FF">**Enhanced Animations**</span>: Plan to incorporate more animations throughout the application to boost user engagement and improve the overall aesthetic. For instance, an animation could be added when the user clicks the "Show Answer" button while playing a collection.
+- **Enhanced Animations**: Plan to incorporate more animations throughout the application to boost user engagement and improve the overall aesthetic. For instance, an animation could be added when the user clicks the "Show Answer" button while playing a collection.
+
+- **Offline Support**: Plan to implement offline support, allowing the application to function without an internet connection. This will be achieved through the use of service workers and a local cache, ensuring that users can still access and interact with their data even when they're offline.
