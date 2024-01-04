@@ -1,0 +1,1 @@
+Example [code snippet](https://github.com/ChristianDaher/flashcards/blob/master/src/main/java/com/example/flashcards/model/User.java#L10-L20) in the `User.java` file.
