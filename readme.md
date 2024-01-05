@@ -8,6 +8,14 @@
 - [Technology Stack](#technology-stack)
 - [Features](#features)
 - [Usage & Screenshots](#usage--screenshots)
+   - [Database](#lets-start-with-the-database)
+   - [Migrations & Seeders](#migrations--seeders)
+   - [Models](#models)
+   - [Repositories](#repositories)
+   - [Services](#services)
+   - [Controllers](#controllers)
+   - [Interceptors](#interceptors)
+   - [Views](#views)
 - [Future Improvements & Fixes](#future-improvements--fixes)
 
 ## Prerequisites
@@ -170,9 +178,123 @@ By encapsulating the business logic in services, we make our application easier 
 
 ### Controllers
 
+Controllers are responsible for handling incoming HTTP requests and providing a suitable response. They act as an intermediary between the client and the application's business logic encapsulated in the services.
+
+Each model in our application has a corresponding controller that handles requests related to that model. For example, the [`CollectionController`](./src/main/java/com/example/flashcards/controller/CollectionController.java) handles requests related to collections, such as creating a new collection, updating a collection's information, or deleting a collection.
+
+Controllers use the methods provided by the services to perform these operations. For instance, to create a new collection, the `CollectionController` might call the `createCollection` method of the `CollectionService`.
+
+Currently, our application includes two controllers that map directly to the models: [`CollectionController`](./src/main/java/com/example/flashcards/controller/CollectionController.java) and [`FlashcardController`](./src/main/java/com/example/flashcards/controller/FlashcardController.java). 
+
+In future updates, we plan to introduce two additional controllers. The `AuthController` will manage authentication-related tasks, such as user login, logout, and registration. The `UserController` will handle user-specific features, including password updates, email changes, and other user profile modifications.
+
+By separating the handling of HTTP requests and responses from the business logic, controllers make our application more modular and easier to maintain.
+
+![Main Controller](screenshots/main%20controller.png "Main Controller")
+In the [`MainController`](./src/main/java/com/example/flashcards/controller/MainController.java), we handle the base path of our application. This means that GET requests to the routes `/`, `/index`, `/home`, and `/controllers` will return the `index.jsp` template, which displays a list of the user's collections grouped by category. As you can see, we call various services within the controller. This approach enhances code maintainability and readability.
+
+![Controller Example](screenshots/controller%20example.png "Controller Example")
+In the [`FlashcardController`](./src/main/java/com/example/flashcards/controller/FlashcardController.java), we handle all requests that start with `/collection/{collectionId}/flashcard`. This controller is designed to manage flashcards within a specific collection, identified by `collectionId` in the URL.
+
+For instance, a POST request to `/collection/{collectionId}/flashcard/create` triggers the creation of a new flashcard within the specified collection. This method takes the flashcard data from the request body, creates a new flashcard object, and saves it to the database using the [`FlashcardService`](./src/main/java/com/example/flashcards/service/FlashcardService.java).
+
+By structuring our routes in this way, we can easily manage flashcards within specific collections and ensure that our URLs are intuitive and RESTful.
+
 ### Interceptors
 
+Interceptors (A.K.A Middlewares) are used to intercept incoming HTTP requests or outgoing HTTP responses. They provide a way to manipulate these requests and responses before they reach their destination (a controller method) or after they leave their source (a controller method).
+
+In our application, we use interceptors for various purposes. For example, we might have an interceptor that checks if a user is authenticated before allowing them to access certain routes. If the user is not authenticated, the interceptor can stop the request from reaching the controller method and instead send a response with an error message.
+
+Another use case for interceptors could be logging. We could have an interceptor that logs information about every incoming request, such as the request method, the URL, and the IP address of the client.
+
+Interceptors provide a powerful way to add behavior to our application that is not directly related to handling a specific request or response. They help us keep our controllers and services focused on their main responsibilities, making our application more modular and easier to maintain.
+
+![Interceptor Configuration](screenshots/interceptor%20config.png "Interceptor Configuration")
+Firstly, we have an [`Interceptor Configuration`](./src/main/java/com/example/flashcards/config/InterceptorAppConfig.java) file. This configuration file, which implements the `WebMvcConfigurer` interface, serves as the central hub for our interceptors.
+
+The `WebMvcConfigurer` interface provides a method called `addInterceptors` that we can override to register our interceptors. In this method, we create instances of our interceptors and add them to the `InterceptorRegistry`.
+
+Once we've added these interceptors, we specify which requests they should handle based on the request path. For instance, the [`CollectionInterceptor`](./src/main/java/com/example/flashcards/interceptor/CollectionInterceptor.java) handles all requests that start with `/collection/{collectionId}/`. The `{collectionId}` is a placeholder for any specific collection ID, and the `/**` at the end of the path is a wildcard that matches any sequence of characters. This means that the [`CollectionInterceptor`](./src/main/java/com/example/flashcards/interceptor/CollectionInterceptor.java) will handle requests to any path that starts with `/collection/{collectionId}/`.
+
+However, there is an exception for the route `/collection/create`. This route does not correspond to a specific collection ID, so it is not handled by the [`CollectionInterceptor`](./src/main/java/com/example/flashcards/interceptor/CollectionInterceptor.java).
+
+![Collection Interceptor](screenshots/interceptor%20example.png "Collection Interceptor")
+The [`CollectionInterceptor`](./src/main/java/com/example/flashcards/interceptor/CollectionInterceptor.java) is designed to validate the `collectionId` present in the request URL. It checks if the `collectionId` is valid and corresponds to an existing collection. If the `collectionId` is not valid or the collection does not exist, the request is halted before reaching the controller. Instead, the `error.jsp` page is rendered, displaying a specific error message to inform the user about the issue.
+
+Similarly, the [`FlashcardInterceptor`](./src/main/java/com/example/flashcards/interceptor/FlashcardInterceptor.java) applies the same logic to validate the `flashcardId` present in the request URL. It ensures that the `flashcardId` is valid and corresponds to an existing flashcard within the specified collection. If the `flashcardId` is not valid or the flashcard does not exist, the request is halted and the `error.jsp` page is rendered with an appropriate error message.
+
+This interception process filters incoming requests before they reach the controller, ensuring that only valid requests are processed. This is a crucial part of maintaining the integrity and security of our application, as well as enhancing the user experience.
+
 ### Views
+
+Finally, let's discuss the templates we use. After a request successfully passes through the controller, a page is rendered with certain attributes. For instance, the [`MainController`](./src/main/java/com/example/flashcards/controller/MainController.java#L27-L37) returns the `index.jsp` template, along with a user object and the user's collections grouped by category. These attributes are then used within the template to display relevant information to the user. You can find this template at [`index.jsp`](./src/main/webapp/WEB-INF/views/index.jsp).
+
+![Index Code](screenshots/index%20code.png "Index Code")
+
+![Index](screenshots/index.png "Index")
+The index page is the first page users see when they access the web app. Collections are grouped by category, displaying the title of the collection, the number of flashcards in each collection, and options to edit or play a collection.
+
+![Index Empty](screenshots/index%20empty.png "Index Empty")
+This is the view users will see if they have no collections.
+
+Let's explore the first collection.
+
+![Collection View](screenshots/collection%20view.png "Collection View")
+Here, users can edit the collection's information, delete it along with all its flashcards, return to the index page, reset the flashcards status, play the collection, add a flashcard, and edit a flashcard.
+
+![Collection Edit](screenshots/collection%20edit.png "Collection Edit")
+To edit a flashcard, users can click on the title or category. It's an input field. Once changes are made, clicking on the pencil icon next to it will save the changes.
+
+![Collection After Edit](screenshots/collection%20after%20edit.png "Collection After Edit")
+This is how it looks after returning to the `index`.
+
+Let's delete a collection.
+
+![Collection Delete](screenshots/collection%20delete.png "Collection Delete")
+To delete a flashcard, users can click on the trash icon next to the pencil icon that edits the collection. A modal will pop up to confirm the deletion.
+
+![Play](screenshots/play.png "Play")
+When users want to play a collection, the controller returns the `collection/play.jsp` with a random flashcard from the collection's pool of unanswered flashcards. Users can mark the question right/wrong to proceed to the next flashcard, and have the option to show/hide the answer. Once done, users are redirected to the `collection/view.jsp` where they can reset all the flashcards and play again. Users can see all the flashcards they answered correctly and incorrectly.
+
+![Show Answer](screenshots/show%20answer.png "Show Answer")
+This is the `Show Answer` button inside the `collection/play.jsp`.
+
+![Flashcard Create](screenshots/flashcard%20create.png "Flashcard Create")
+Clicking on the big + icon in the collection prompts users to fill a form to add a flashcard.
+
+![Flashcard After Create](screenshots/flashcard%20after%20create.png "Flashcard After Create")
+After adding a new flashcard, it automatically appears in the collection and users can directly edit/delete it.
+
+![Flashcard Edit](screenshots/flashcard%20edit.png "Flashcard Edit")
+Clicking on the pencil icon of the flashcard allows users to change the form data and click edit to update the flashcard information.
+
+![Flashcard After Edit](screenshots/flashcard%20after%20edit.png "Flashcard After Edit")
+After editing a flashcard, it resets and directly displays the new information.
+
+![Flashcard Delete](screenshots/flashcard%20delete.png "Flashcard Delete")
+Clicking on the pencil icon of the flashcard also gives users the option to directly delete the flashcard.
+
+![Collection Reset](screenshots/collection%20reset.png "Collection Reset")
+After playing a collection and answering all its flashcards, clicking on the `Reset Flashcards` button resets all the flashcards for users to play again.
+
+Clicking on `Create Collection` redirects users to `/collection/create`.
+
+![Collection Create](screenshots/collection%20create.png "Collection Create")
+After filling the form and submitting, users are redirected to the `index` with the updated information.
+
+![Collection After Create](screenshots/collection%20after%20create.png "Collection After Create")
+
+Lastly, these are the error pages that are currently displayed.
+
+![Error id Not Found](screenshots/error%20id%20not%20found.png "Error Id Not Found")
+This error is displayed when the collection id is not found.
+
+![Error id Not Number](screenshots/error%20id%20not%20number.png "Error Id Not Number")
+This error is displayed when the collection id is not a number.
+
+![Error When Collection Flashcards Are All Answered](screenshots/error%20when%20collection%20flashcards%20are%20all%20answered.png "Error When Collection Flashcards Are All Answered")
+This error is displayed when all flashcards in a collection have been answered.
 
 ## Future Improvements & Fixes
 
