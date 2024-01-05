@@ -54,7 +54,7 @@ Follow these steps to get the application up and running:
 
 5. **Update application.properties**
 
-   Open the `application.properties` file and update the MySQL properties to match your environment.
+   Open the [`application.properties`](./src/main/resources/application.properties) file and update the MySQL properties to match your environment.
 
 6. **Run the application**
 
@@ -170,9 +170,9 @@ Each model is associated with a repository that extends the `JpaRepository` inte
 
 Each model is associated with a service that uses the corresponding repository. These services encapsulate the business logic of our application, keeping it separate from the presentation logic in the controllers and the data access logic in the repositories.
 
-Services use the methods provided by the repositories to interact with the database. They can perform operations that involve multiple steps or depend on the results of previous operations. For example, in [`CollectionService`](./src/main/java/com/example/flashcards/service/CollectionService.java#L69-L77), the method `Collection createCollection(Collection collection, Long userId);` is designed to create a new collection and associate it with a user.
+Services use the methods provided by the repositories to interact with the database. They can perform operations that involve multiple steps or depend on the results of previous operations. For example, in [`CollectionService`](./src/main/java/com/example/flashcards/service/CollectionService.java), the method `Collection createCollection(Collection collection, Long userId);` is designed to create a new collection and associate it with a user.
 
-Services also handle error checking and validation. For instance, before creating a new collection, the `createCollection` method might check if a collection with the same name already exists for the user. If it does, the method could throw an exception or return an error message.
+Services also handle error checking and validation. For instance, before creating a new collection, the [`createCollection`](./src/main/java/com/example/flashcards/service/CollectionService.java#L69-L77) method might check if a collection with the same name already exists for the user. If it does, the method could throw an exception or return an error message.
 
 By encapsulating the business logic in services, we make our application easier to maintain and test. We can change the implementation of a service without affecting the rest of the application, as long as the service's interface remains the same.
 
@@ -182,7 +182,7 @@ Controllers are responsible for handling incoming HTTP requests and providing a 
 
 Each model in our application has a corresponding controller that handles requests related to that model. For example, the [`CollectionController`](./src/main/java/com/example/flashcards/controller/CollectionController.java) handles requests related to collections, such as creating a new collection, updating a collection's information, or deleting a collection.
 
-Controllers use the methods provided by the services to perform these operations. For instance, to create a new collection, the `CollectionController` might call the `createCollection` method of the `CollectionService`.
+Controllers use the methods provided by the services to perform these operations. For instance, to create a new collection, the [`CollectionController`](./src/main/java/com/example/flashcards/controller/CollectionController.java) might call the [`createCollection`](./src/main/java/com/example/flashcards/service/CollectionService.java#L69-L77) method of the [`CollectionService`](./src/main/java/com/example/flashcards/service/CollectionService.java).
 
 Currently, our application includes two controllers that map directly to the models: [`CollectionController`](./src/main/java/com/example/flashcards/controller/CollectionController.java) and [`FlashcardController`](./src/main/java/com/example/flashcards/controller/FlashcardController.java). 
 
@@ -191,7 +191,7 @@ In future updates, we plan to introduce two additional controllers. The `AuthCon
 By separating the handling of HTTP requests and responses from the business logic, controllers make our application more modular and easier to maintain.
 
 ![Main Controller](screenshots/main%20controller.png "Main Controller")
-In the [`MainController`](./src/main/java/com/example/flashcards/controller/MainController.java), we handle the base path of our application. This means that GET requests to the routes `/`, `/index`, `/home`, and `/controllers` will return the `index.jsp` template, which displays a list of the user's collections grouped by category. As you can see, we call various services within the controller. This approach enhances code maintainability and readability.
+In the [`MainController`](./src/main/java/com/example/flashcards/controller/MainController.java), we handle the base path of our application. This means that GET requests to the routes `/`, `/index`, `/home`, and `/controllers` will return the [`index.jsp`](./src/main/webapp/WEB-INF/views/index.jsp) template, which displays a list of the user's collections grouped by category. As you can see, we call various services within the controller. This approach enhances code maintainability and readability.
 
 ![Controller Example](screenshots/controller%20example.png "Controller Example")
 In the [`FlashcardController`](./src/main/java/com/example/flashcards/controller/FlashcardController.java), we handle all requests that start with `/collection/{collectionId}/flashcard`. This controller is designed to manage flashcards within a specific collection, identified by `collectionId` in the URL.
@@ -220,15 +220,15 @@ Once we've added these interceptors, we specify which requests they should handl
 However, there is an exception for the route `/collection/create`. This route does not correspond to a specific collection ID, so it is not handled by the [`CollectionInterceptor`](./src/main/java/com/example/flashcards/interceptor/CollectionInterceptor.java).
 
 ![Collection Interceptor](screenshots/interceptor%20example.png "Collection Interceptor")
-The [`CollectionInterceptor`](./src/main/java/com/example/flashcards/interceptor/CollectionInterceptor.java) is designed to validate the `collectionId` present in the request URL. It checks if the `collectionId` is valid and corresponds to an existing collection. If the `collectionId` is not valid or the collection does not exist, the request is halted before reaching the controller. Instead, the `error.jsp` page is rendered, displaying a specific error message to inform the user about the issue.
+The [`CollectionInterceptor`](./src/main/java/com/example/flashcards/interceptor/CollectionInterceptor.java) is designed to validate the `collectionId` present in the request URL. It checks if the `collectionId` is valid and corresponds to an existing collection. If the `collectionId` is not valid or the collection does not exist, the request is halted before reaching the controller. Instead, the [`error.jsp`](./src/main/webapp/WEB-INF/views/error.jsp) page is rendered, displaying a specific error message to inform the user about the issue.
 
-Similarly, the [`FlashcardInterceptor`](./src/main/java/com/example/flashcards/interceptor/FlashcardInterceptor.java) applies the same logic to validate the `flashcardId` present in the request URL. It ensures that the `flashcardId` is valid and corresponds to an existing flashcard within the specified collection. If the `flashcardId` is not valid or the flashcard does not exist, the request is halted and the `error.jsp` page is rendered with an appropriate error message.
+Similarly, the [`FlashcardInterceptor`](./src/main/java/com/example/flashcards/interceptor/FlashcardInterceptor.java) applies the same logic to validate the `flashcardId` present in the request URL. It ensures that the `flashcardId` is valid and corresponds to an existing flashcard within the specified collection. If the `flashcardId` is not valid or the flashcard does not exist, the request is halted and the [`error.jsp`](./src/main/webapp/WEB-INF/views/error.jsp) page is rendered with an appropriate error message.
 
 This interception process filters incoming requests before they reach the controller, ensuring that only valid requests are processed. This is a crucial part of maintaining the integrity and security of our application, as well as enhancing the user experience.
 
 ### Views
 
-Finally, let's discuss the templates we use. After a request successfully passes through the controller, a page is rendered with certain attributes. For instance, the [`MainController`](./src/main/java/com/example/flashcards/controller/MainController.java#L27-L37) returns the `index.jsp` template, along with a user object and the user's collections grouped by category. These attributes are then used within the template to display relevant information to the user. You can find this template at [`index.jsp`](./src/main/webapp/WEB-INF/views/index.jsp).
+Finally, let's discuss the templates we use. After a request successfully passes through the controller, a page is rendered with certain attributes. For instance, the [`MainController`](./src/main/java/com/example/flashcards/controller/MainController.java#L27-L37) returns the [`index.jsp`](./src/main/webapp/WEB-INF/views/index.jsp) template, along with a user object and the user's collections grouped by category. These attributes are then used within the template to display relevant information to the user. You can find this template at [`index.jsp`](./src/main/webapp/WEB-INF/views/index.jsp).
 
 ![Index Code](screenshots/index%20code.png "Index Code")
 
@@ -247,7 +247,7 @@ Here, users can edit the collection's information, delete it along with all its 
 To edit a flashcard, users can click on the title or category. It's an input field. Once changes are made, clicking on the pencil icon next to it will save the changes.
 
 ![Collection After Edit](screenshots/collection%20after%20edit.png "Collection After Edit")
-This is how it looks after returning to the `index`.
+This is how it looks after returning to the [`index.jsp`](./src/main/webapp/WEB-INF/views/index.jsp).
 
 Let's delete a collection.
 
@@ -255,10 +255,10 @@ Let's delete a collection.
 To delete a flashcard, users can click on the trash icon next to the pencil icon that edits the collection. A modal will pop up to confirm the deletion.
 
 ![Play](screenshots/play.png "Play")
-When users want to play a collection, the controller returns the `collection/play.jsp` with a random flashcard from the collection's pool of unanswered flashcards. Users can mark the question right/wrong to proceed to the next flashcard, and have the option to show/hide the answer. Once done, users are redirected to the `collection/view.jsp` where they can reset all the flashcards and play again. Users can see all the flashcards they answered correctly and incorrectly.
+When users want to play a collection, the controller returns the [`collection/play.jsp`](./src/main/webapp/WEB-INF/views/collection/play.jsp) with a random flashcard from the collection's pool of unanswered flashcards. Users can mark the question right/wrong to proceed to the next flashcard, and have the option to show/hide the answer. Once done, users are redirected to the [`collection/view.jsp`](./src/main/webapp/WEB-INF/views/collection/view.jsp) where they can reset all the flashcards and play again. Users can see all the flashcards they answered correctly and incorrectly.
 
 ![Show Answer](screenshots/show%20answer.png "Show Answer")
-This is the `Show Answer` button inside the `collection/play.jsp`.
+This is the `Show Answer` button inside the [`collection/play.jsp`](./src/main/webapp/WEB-INF/views/collection/play.jsp).
 
 ![Flashcard Create](screenshots/flashcard%20create.png "Flashcard Create")
 Clicking on the big + icon in the collection prompts users to fill a form to add a flashcard.
@@ -281,7 +281,7 @@ After playing a collection and answering all its flashcards, clicking on the `Re
 Clicking on `Create Collection` redirects users to `/collection/create`.
 
 ![Collection Create](screenshots/collection%20create.png "Collection Create")
-After filling the form and submitting, users are redirected to the `index` with the updated information.
+After filling the form and submitting, users are redirected to the [`index.jsp`](./src/main/webapp/WEB-INF/views/index.jsp) with the updated information.
 
 ![Collection After Create](screenshots/collection%20after%20create.png "Collection After Create")
 
