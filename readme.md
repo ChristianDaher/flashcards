@@ -64,7 +64,7 @@ Follow these steps to get the application up and running:
 
 If all is working correctly, the database should now have a couple of tables and records inside each table.
 
-The application should now be running on `localhost:8080` by default. Check the terminal logs to ensure there are no errors.
+The application should now be running on [`localhost:8080`](http://localhost:8080) by default. Check the terminal logs to ensure there are no errors.
 
 ## Introduction
 
